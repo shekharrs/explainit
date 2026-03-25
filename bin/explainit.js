@@ -1,68 +1,118 @@
 #!/usr/bin/env node
 
-import { program } from 'commander'
+import { Command } from 'commander'
 import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 
+const program = new Command()
+
+// ─────────────────────────────────────────────────────────────
+// 🔥 CLI HEADER
+// ─────────────────────────────────────────────────────────────
+function showHeader() {
+  console.log(
+    chalk.cyan.bold(`
+🚀 ExplainIt CLI
+────────────────────────────────
+`)
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// ⚙️ CONFIG
+// ─────────────────────────────────────────────────────────────
 program
   .name('explainit')
-  .description('Quiz yourself on code before you commit it')
+  .usage('[command] [options]')
+  .description(chalk.yellow('🧠 Turn your code into a quiz before committing'))
   .version('1.0.0')
 
-// ── explainit check <file> ──────────────────────────────────────────
-program
-  .command('check <file>')
-  .description('Read a file and print its contents')
-  .action((file) => {
+// Clean options (no descriptions)
+program.configureHelp({
+  optionTerm: (option) => option.flags,
+})
 
-    // Step 1: check the file exists
+// Custom help footer
+program.addHelpText(
+  'after',
+  chalk.gray(`
+Examples:
+  explainit scan index.js
+  explainit quiz app.js
+  explainit score
+
+💡 Tip:
+  Run 'explainit quiz <file>' before every commit 🚀
+`)
+)
+
+// ─────────────────────────────────────────────────────────────
+// 🔍 explainit scan <file>
+// ─────────────────────────────────────────────────────────────
+program
+  .command('scan <file>')
+  .alias('s')
+  .description('🔍 Scan your code instantly')
+  .action((file) => {
+    showHeader()
+
     const filePath = path.resolve(file)
 
     if (!fs.existsSync(filePath)) {
-      console.log(chalk.red(`\n  File not found: ${file}\n`))
+      console.log(chalk.red(`❌ File not found: ${file}\n`))
       process.exit(1)
     }
 
-    // Step 2: read the file
     const content = fs.readFileSync(filePath, 'utf-8')
     const lines = content.split('\n')
 
-    // Step 3: print a nice header
-    console.log()
-    console.log(chalk.bold.white('  explainit') + chalk.gray(' — do you understand this code?'))
-    console.log(chalk.gray('  ─────────────────────────────────────'))
-    console.log(chalk.cyan(`  File: `) + chalk.white(file))
-    console.log(chalk.cyan(`  Lines: `) + chalk.white(lines.length))
-    console.log(chalk.gray('  ─────────────────────────────────────'))
-    console.log()
+    console.log(chalk.cyan(`📄 File: `) + chalk.white(file))
+    console.log(chalk.cyan(`📏 Lines: `) + chalk.white(lines.length))
+    console.log(chalk.gray('────────────────────────────────\n'))
 
-    // Step 4: print first 20 lines with line numbers
-    console.log(chalk.gray('  Preview (first 20 lines):'))
-    console.log()
+    console.log(chalk.gray('Preview (first 20 lines):\n'))
 
     lines.slice(0, 20).forEach((line, i) => {
-      const lineNum = chalk.gray(`  ${String(i + 1).padStart(3)} │ `)
+      const lineNum = chalk.gray(`${String(i + 1).padStart(3)} │ `)
       console.log(lineNum + chalk.white(line))
     })
 
     if (lines.length > 20) {
-      console.log(chalk.gray(`\n  ... and ${lines.length - 20} more lines`))
+      console.log(chalk.gray(`\n... and ${lines.length - 20} more lines`))
     }
 
     console.log()
-    console.log(chalk.green('  ✓ File read successfully!'))
-    console.log(chalk.gray('  Next: Gemini will generate quiz questions from this file.\n'))
+    console.log(chalk.green('✅ File scanned successfully!'))
+    console.log(chalk.gray('Next: Run "explainit quiz <file>" 🧠\n'))
   })
 
-// ── explainit stats ─────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// 🧠 explainit quiz <file>
+// ─────────────────────────────────────────────────────────────
 program
-  .command('stats')
-  .description('Show your quiz history and scores')
+  .command('quiz <file>')
+  .alias('q')
+  .description('🧠 Test your understanding')
+  .action((file) => {
+    showHeader()
+
+    console.log(chalk.blue('🤖 Generating quiz from your code...'))
+    console.log(chalk.gray('(Gemini integration coming next 🔥)\n'))
+  })
+
+// ─────────────────────────────────────────────────────────────
+// 📊 explainit score
+// ─────────────────────────────────────────────────────────────
+program
+  .command('score')
+  .alias('sc')
+  .description('📊 View your progress')
   .action(() => {
-    console.log()
-    console.log(chalk.bold.white('  explainit stats'))
-    console.log(chalk.gray('  Coming in Week 3!\n'))
+    showHeader()
+
+    console.log(chalk.magenta('📊 Your Stats'))
+    console.log(chalk.gray('Coming soon in next update 🚀\n'))
   })
 
 program.parse()
