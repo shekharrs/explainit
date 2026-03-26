@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 
-// Main Content of JS
+/*
+ function addToNum(a,b) {
+   return a+b
+ }
+
+sum1 = addToNum(5,5)
+console.log(sum1)
+*/
 import { Command } from "commander";
 import chalk from "chalk";
 import fs from "fs";
