@@ -124,18 +124,21 @@ program
   .action(() => {
     const hookPath = path.resolve(".git/hooks/pre-commit");
 
-    const script = `#!/bin/sh
+   const script = `#!/bin/sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts)$')
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(js|ts|jsx|tsx|py)$')
 
 [ -z "$FILES" ] && exit 0
 
 echo ""
 echo "🧠 explainit — quick check before commit"
-echo ""
+echo "──────────────────────────────────────────"
 
 for FILE in $FILES; do
-  node -e "import('./lib/quiz.js').then(m => m.runQuiz(['$FILE']))"
+  node --input-type=module <<EOF
+import { runQuiz } from '${process.cwd().replace(/\\/g, '/')}/lib/quiz.js';
+await runQuiz(['$FILE']);
+EOF
 done
 
 exit 0
