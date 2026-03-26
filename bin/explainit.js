@@ -1,19 +1,5 @@
 #!/usr/bin/env node
 
-/*
- function addToNum(a,b) {
-   return a+b
- }
-
-sum1 = addToNum(5,5)
-console.log(sum1)
-
-function multipleNum(a, b) {
-  return a*b;
-}
-sum2 = multipleNum(a,b)
-console.log(sum2)
-*/
 import { Command } from "commander";
 import chalk from "chalk";
 import fs from "fs";
