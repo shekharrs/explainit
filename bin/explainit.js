@@ -123,8 +123,9 @@ program
   .description("Install git hook")
   .action(() => {
     const hookPath = path.resolve(".git/hooks/pre-commit");
+    const projectPath = process.cwd().replace(/\\/g, "/");
 
-   const script = `#!/bin/sh
+    const script = `#!/bin/sh
 
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(js|ts|jsx|tsx|py)$')
 
@@ -135,19 +136,27 @@ echo "🧠 explainit — quick check before commit"
 echo "──────────────────────────────────────────"
 
 for FILE in $FILES; do
-  node --input-type=module <<EOF
-import { runQuiz } from '${process.cwd().replace(/\\/g, '/')}/lib/quiz.js';
-await runQuiz(['$FILE']);
-EOF
+  node "${projectPath}/run-quiz.js" "$FILE"
 done
 
 exit 0
 `;
 
+    // write the hook
     fs.writeFileSync(hookPath, script);
     fs.chmodSync(hookPath, "755");
 
-    console.log("✅ Hook installed");
+    // write run-quiz.js — the bridge file Node can actually run on Windows
+    const runnerPath = path.resolve("run-quiz.js");
+    const runner = `import { runQuiz } from './lib/quiz.js';
+const file = process.argv[2];
+if (file) await runQuiz([file]);
+`;
+
+    fs.writeFileSync(runnerPath, runner);
+
+    console.log(chalk.green("\n  ✅ Hook installed successfully!"));
+    console.log(chalk.gray("  explainit will now run on every commit\n"));
   });
 
 program.parse();
