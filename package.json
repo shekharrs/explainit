@@ -1,18 +1,52 @@
 {
   "name": "explainit",
   "version": "1.0.0",
-  "description": "Quiz yourself on code before you commit it",
+  "description": "🧠 AI-powered CLI that quizzes you on your code before you commit",
   "main": "bin/explainit.js",
   "bin": {
     "explainit": "./bin/explainit.js"
   },
   "type": "module",
+
   "scripts": {
     "start": "node bin/explainit.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+
+  "keywords": [
+    "cli",
+    "developer-tools",
+    "ai",
+    "git",
+    "productivity",
+    "learning",
+    "code-review",
+    "education"
+  ],
+
+  "author": "Shekhar",
+  "license": "MIT",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shekharrs/explainit.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/shekharrs/explainit/issues"
+  },
+
+  "homepage": "https://github.com/shekharrs/explainit#readme",
+
+  "files": [
+    "bin",
+    "lib",
+    "run-quiz.js"
+  ],
+
+  "engines": {
+    "node": ">=18"
+  },
+
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "chalk": "^5.6.2",
