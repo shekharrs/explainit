@@ -1,6 +1,11 @@
-const multiplFun = (a,b) => {
-    return a * b;
+function calAvg(arr) {
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+    }
+    return sum / arr.length;
 }
 
-sum1 = multiplFun(12,8)
-console.log(sum1)
+const arr = [10, 20, 30, 40, 50];
+const average = calAvg(arr);
+console.log("Average:", average);
