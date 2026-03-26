@@ -5,8 +5,8 @@ const file = process.argv[2];
 if (file) {
   try {
     await runQuiz([file]);
-  } catch (err) {
-    // never block the commit
+  } catch {
+    // never block commit
   }
 }
 
