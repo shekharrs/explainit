@@ -126,7 +126,7 @@ program
 
     const script = `#!/bin/sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(js|ts)$')
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts)$')
 
 [ -z "$FILES" ] && exit 0
 
@@ -134,9 +134,9 @@ echo ""
 echo "🧠 explainit — quick check before commit"
 echo ""
 
-for FILE in $FILES; do
-  node -e "import('./lib/quiz.js').then(m => m.runQuiz('$FILE'))"
-done
+node -e "
+  import('./lib/quiz.js').then(m => m.runQuiz(process.argv.slice(1)))
+" $FILES
 
 exit 0
 `;
