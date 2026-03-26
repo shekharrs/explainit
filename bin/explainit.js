@@ -134,9 +134,9 @@ echo ""
 echo "🧠 explainit — quick check before commit"
 echo ""
 
-node -e "
-  import('./lib/quiz.js').then(m => m.runQuiz(process.argv.slice(1)))
-" $FILES
+for FILE in $FILES; do
+  node -e "import('./lib/quiz.js').then(m => m.runQuiz(['$FILE']))"
+done
 
 exit 0
 `;
