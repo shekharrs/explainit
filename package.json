@@ -38,9 +38,11 @@
   "homepage": "https://github.com/shekharrs/explainit#readme",
 
   "files": [
-    "bin",
+    "bin/explainit.js",
     "lib",
-    "run-quiz.js"
+    "run-quiz.js",
+    "README.md",
+    "LICENSE"
   ],
 
   "engines": {
