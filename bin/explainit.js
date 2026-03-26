@@ -4,167 +4,273 @@ import { Command } from "commander";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
+import os from "os";
+import readline from "readline";
 
 const program = new Command();
 
 // ─────────────────────────────────────────────────────────────
-// 🔥 CLI HEADER
+// 🎨 THEME
+// ─────────────────────────────────────────────────────────────
+const t = {
+  brand:   (s) => chalk.hex("#A78BFA")(s),      // soft purple
+  accent:  (s) => chalk.hex("#34D399")(s),      // mint green
+  hot:     (s) => chalk.hex("#FB923C")(s),      // orange
+  info:    (s) => chalk.hex("#60A5FA")(s),      // blue
+  muted:   (s) => chalk.hex("#6B7280")(s),      // gray
+  dim:     (s) => chalk.hex("#374151")(s),      // dark gray
+  white:   (s) => chalk.hex("#F9FAFB")(s),      // near white
+  success: (s) => chalk.hex("#4ADE80")(s),      // green
+  danger:  (s) => chalk.hex("#F87171")(s),      // red
+  bold:    (s) => chalk.bold(s),
+};
+
+// ─────────────────────────────────────────────────────────────
+// 🖼️  HEADER
 // ─────────────────────────────────────────────────────────────
 function showHeader() {
+  console.log();
   console.log(
-    chalk.cyan.bold(`
-🚀 ExplainIt CLI
-────────────────────────────────
-`),
+    t.brand("  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗")
+  );
+  console.log(
+    t.brand("  ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔══██╗██║████╗  ██║██║╚══██╔══╝")
+  );
+  console.log(
+    t.accent("  █████╗   ╚███╔╝ ██████╔╝██║     ███████║██║██╔██╗ ██║██║   ██║   ")
+  );
+  console.log(
+    t.accent("  ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██╔══██║██║██║╚██╗██║██║   ██║   ")
+  );
+  console.log(
+    t.hot("  ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║██║ ╚████║██║   ██║   ")
+  );
+  console.log(
+    t.hot("  ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   ")
+  );
+  console.log();
+  console.log(
+    t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+  );
+  console.log(
+    "  " + t.muted("by") + " " + t.brand("@explainit") +
+    t.muted("  ·  ") + t.accent("quiz your code") +
+    t.muted("  ·  ") + t.info("v1.0.0")
+  );
+  console.log(
+    t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+  );
+  console.log();
+}
+
+// ─────────────────────────────────────────────────────────────
+// 🧱 UI HELPERS
+// ─────────────────────────────────────────────────────────────
+function tag(label, color = t.brand) {
+  return color(" " + label + " ");
+}
+
+function section(title) {
+  console.log();
+  console.log("  " + t.brand("▸") + " " + t.white(chalk.bold(title)));
+  console.log("  " + t.muted("─".repeat(44)));
+}
+
+function row(icon, label, value = "") {
+  console.log(
+    "  " + icon + "  " + t.white(label.padEnd(20)) + t.muted(value)
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// ⚙️ CONFIG
+// ⚙️  CONFIG
 // ─────────────────────────────────────────────────────────────
 program
   .name("explainit")
   .usage("[command] [options]")
-  .description(chalk.yellow("🧠 Turn your code into a quiz before committing"))
-  .version("1.0.0");
+  .description(t.brand("🧠 quiz your code before it ships"))
+  .version(t.accent("1.0.0"), "-V, --version");
 
-// Clean options (no descriptions)
 program.configureHelp({
   optionTerm: (option) => option.flags,
+  commandDescription: (cmd) => cmd.description(),
 });
 
-// Custom help footer
+program.configureOutput({
+  writeOut: (str) => process.stdout.write(str),
+  writeErr: (str) => process.stdout.write(str),
+});
+
+// custom help
+program.addHelpText("beforeAll", () => {
+  showHeader();
+  return "";
+});
+
 program.addHelpText(
   "after",
-  chalk.gray(`
-Examples:
-  explainit scan index.js
-  explainit quiz app.js
-  explainit score
-
-💡 Tip:
-  Run 'explainit quiz <file>' before every commit 🚀
-`),
+  [
+    "",
+    "  " + t.muted("┄".repeat(44)),
+    "  " + t.brand("✦") + "  " + t.white("commands"),
+    "",
+    "  " + t.accent("  scan  ") + t.muted("│") + "  " + t.white("scan a file and preview its contents"),
+    "  " + t.info("  quiz  ") + t.muted("│") + "  " + t.white("generate an AI quiz from your code"),
+    "  " + t.hot(" score  ") + t.muted("│") + "  " + t.white("view your quiz history and score"),
+    "  " + t.brand(" setup  ") + t.muted("│") + "  " + t.white("connect your Gemini API key"),
+    "  " + t.brand("install ") + t.muted("│") + "  " + t.white("hook into git — auto-quiz on commit"),
+    "",
+    "  " + t.muted("┄".repeat(44)),
+    "  " + t.brand("✦") + "  " + t.white("examples"),
+    "",
+    "  " + t.muted("$") + "  " + t.accent("explainit install") + t.muted("            # set up git hook"),
+    "  " + t.muted("$") + "  " + t.accent("explainit scan index.js") + t.muted("      # preview file"),
+    "  " + t.muted("$") + "  " + t.accent("explainit quiz app.js") + t.muted("        # quiz yourself"),
+    "  " + t.muted("$") + "  " + t.accent("explainit score") + t.muted("              # check progress"),
+    "",
+  ].join("\n")
 );
 
 // ─────────────────────────────────────────────────────────────
-// 🔍 explainit scan <file>
+// 🔍 scan
 // ─────────────────────────────────────────────────────────────
 program
   .command("scan <file>")
   .alias("s")
-  .description("🔍 Scan your code instantly")
+  .description("scan a file instantly")
   .action((file) => {
     showHeader();
 
     const filePath = path.resolve(file);
 
     if (!fs.existsSync(filePath)) {
-      console.log(chalk.red(`❌ File not found: ${file}\n`));
+      console.log(
+        "  " + t.danger("✗") + " " + t.white("file not found:") + " " + t.hot(file)
+      );
+      console.log();
       process.exit(1);
     }
 
     const content = fs.readFileSync(filePath, "utf-8");
     const lines = content.split("\n");
 
-    console.log(chalk.cyan(`📄 File: `) + chalk.white(file));
-    console.log(chalk.cyan(`📏 Lines: `) + chalk.white(lines.length));
-    console.log(chalk.gray("────────────────────────────────\n"));
+    section("file info");
+    row("📄", "path", file);
+    row("📏", "lines", String(lines.length));
+    row("💾", "size", (fs.statSync(filePath).size / 1024).toFixed(1) + " kb");
 
-    console.log(chalk.gray("Preview (first 20 lines):\n"));
+    section("preview");
 
     lines.slice(0, 20).forEach((line, i) => {
-      const lineNum = chalk.gray(`${String(i + 1).padStart(3)} │ `);
-      console.log(lineNum + chalk.white(line));
+      const num = t.muted(String(i + 1).padStart(3) + " │ ");
+      console.log("  " + num + t.white(line));
     });
 
     if (lines.length > 20) {
-      console.log(chalk.gray(`\n... and ${lines.length - 20} more lines`));
+      console.log();
+      console.log("  " + t.muted(`... ${lines.length - 20} more lines`));
     }
 
     console.log();
-    console.log(chalk.green("✅ File scanned successfully!"));
-    console.log(chalk.gray('Next: Run "explainit quiz <file>" 🧠\n'));
+    console.log(
+      "  " + t.success("✓") + " " + t.white("scan complete") +
+      "  " + t.muted("→") + "  " + t.accent("explainit quiz " + file)
+    );
+    console.log();
   });
 
 // ─────────────────────────────────────────────────────────────
-// 🧠 explainit quiz <file>
+// 🧠 quiz
 // ─────────────────────────────────────────────────────────────
 program
   .command("quiz <file>")
   .alias("q")
-  .description("🧠 Test your understanding")
+  .description("generate an AI quiz from your code")
   .action((file) => {
     showHeader();
-
-    console.log(chalk.blue("🤖 Generating quiz from your code..."));
-    console.log(chalk.gray("(Gemini integration coming next 🔥)\n"));
+    console.log(
+      "  " + t.brand("◆") + " " + t.white("generating quiz from") + " " + t.accent(file) + t.muted(" ...")
+    );
+    console.log();
+    console.log("  " + t.muted("gemini integration active 🔥"));
+    console.log();
   });
 
 // ─────────────────────────────────────────────────────────────
-// 📊 explainit score
+// 📊 score
 // ─────────────────────────────────────────────────────────────
 program
   .command("score")
   .alias("sc")
-  .description("📊 View your progress")
+  .description("view your quiz history and score")
   .action(() => {
     showHeader();
-
-    console.log(chalk.magenta("📊 Your Stats"));
-    console.log(chalk.gray("Coming soon in next update 🚀\n"));
+    section("your stats");
+    console.log("  " + t.muted("no quizzes yet — make a commit to start! 🚀"));
+    console.log();
   });
 
 // ─────────────────────────────────────────────────────────────
-// 🫣 explainit setup — API KEY
+// 🔑 setup
 // ─────────────────────────────────────────────────────────────
 program
   .command("setup")
-  .description("Configure your Gemini API key")
+  .description("connect your Gemini API key")
   .action(() => {
     const CONFIG_DIR = path.join(os.homedir(), ".explainit");
-    const CONFIG_FILE = path.join(CONFIG_DIR, ".explainit", "config.json");
+    const CONFIG_FILE = path.join(CONFIG_DIR, "config.json");
 
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
 
-    console.log(chalk.cyan("\n  explainit setup"));
-    console.log(chalk.gray("  ─────────────────────────────────────────"));
-    console.log(chalk.white("  Get a free Gemini key at:"));
-    console.log(chalk.blue("  https://aistudio.google.com/apikey\n"));
+    showHeader();
+    section("setup — gemini api key");
+    console.log("  " + t.muted("get a free key at:"));
+    console.log("  " + t.info("→") + " " + t.accent("https://aistudio.google.com/apikey"));
+    console.log();
 
-    rl.question(chalk.yellow("  Paste your Gemini API key: "), (key) => {
-      rl.close();
-      if (!key.trim()) {
-        console.log(chalk.red("\n  No key entered. Try again.\n"));
-        return;
+    rl.question(
+      "  " + t.brand("◆") + " " + t.white("paste your api key: "),
+      (key) => {
+        rl.close();
+        if (!key.trim()) {
+          console.log();
+          console.log("  " + t.danger("✗") + " " + t.white("no key entered — try again"));
+          console.log();
+          return;
+        }
+
+        if (!fs.existsSync(CONFIG_DIR)) {
+          fs.mkdirSync(CONFIG_DIR, { recursive: true });
+        }
+
+        fs.writeFileSync(
+          CONFIG_FILE,
+          JSON.stringify({ geminiApiKey: key.trim() }, null, 2)
+        );
+
+        console.log();
+        console.log("  " + t.success("✓") + " " + t.white("api key saved!"));
+        console.log("  " + t.muted("you're all set — run") + " " + t.accent("explainit install") + " " + t.muted("to hook into git"));
+        console.log();
       }
-
-      if (!fs.existsSync(CONFIG_DIR)) {
-        fs.mkdirSync(CONFIG_DIR, { recursive: true });
-      }
-
-      fs.writeFileSync(
-        path.join(CONFIG_DIR, "config.json"),
-        JSON.stringify({ geminiApiKey: key.trim() }, null, 2),
-      );
-
-      console.log(chalk.green("\n  ✓ API key saved successfully!"));
-      console.log(chalk.gray("  You are ready to use explainit\n"));
-    });
+    );
   });
 
 // ─────────────────────────────────────────────────────────────
-// 🎉 explainit install — setup git pre-commit hook
+// 🎉 install
 // ─────────────────────────────────────────────────────────────
 program
   .command("install")
-  .description("Install git hook")
+  .description("hook into git — auto-quiz on every commit")
   .action(() => {
     const hookPath = path.resolve(".git/hooks/pre-commit");
     const projectPath = process.cwd().replace(/\\/g, "/");
+
+    showHeader();
+    section("installing git hook");
 
     const script = `#!/bin/sh
 
@@ -183,21 +289,24 @@ done
 exit 0
 `;
 
-    // write the hook
     fs.writeFileSync(hookPath, script);
     fs.chmodSync(hookPath, "755");
 
-    // write run-quiz.js — the bridge file Node can actually run on Windows
     const runnerPath = path.resolve("run-quiz.js");
     const runner = `import { runQuiz } from './lib/quiz.js';
 const file = process.argv[2];
 if (file) await runQuiz([file]);
 `;
-
     fs.writeFileSync(runnerPath, runner);
 
-    console.log(chalk.green("\n  ✅ Hook installed successfully!"));
-    console.log(chalk.gray("  explainit will now run on every commit\n"));
+    console.log("  " + t.success("✓") + " " + t.white("git hook installed"));
+    console.log("  " + t.success("✓") + " " + t.white("run-quiz.js created"));
+    console.log();
+    console.log(
+      "  " + t.brand("◆") + " " + t.white("every") + " " + t.accent("git commit") +
+      " " + t.white("will now trigger a quiz automatically")
+    );
+    console.log();
   });
 
 program.parse();
