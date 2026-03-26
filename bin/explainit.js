@@ -116,6 +116,47 @@ program
   });
 
 // ─────────────────────────────────────────────────────────────
+// 🫣 explainit setup — API KEY
+// ─────────────────────────────────────────────────────────────
+program
+  .command("setup")
+  .description("Configure your Gemini API key")
+  .action(() => {
+    const CONFIG_DIR = path.join(os.homedir(), ".explainit");
+    const CONFIG_FILE = path.join(CONFIG_DIR, ".explainit", "config.json");
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    console.log(chalk.cyan("\n  explainit setup"));
+    console.log(chalk.gray("  ─────────────────────────────────────────"));
+    console.log(chalk.white("  Get a free Gemini key at:"));
+    console.log(chalk.blue("  https://aistudio.google.com/apikey\n"));
+
+    rl.question(chalk.yellow("  Paste your Gemini API key: "), (key) => {
+      rl.close();
+      if (!key.trim()) {
+        console.log(chalk.red("\n  No key entered. Try again.\n"));
+        return;
+      }
+
+      if (!fs.existsSync(CONFIG_DIR)) {
+        fs.mkdirSync(CONFIG_DIR, { recursive: true });
+      }
+
+      fs.writeFileSync(
+        path.join(CONFIG_DIR, "config.json"),
+        JSON.stringify({ geminiApiKey: key.trim() }, null, 2),
+      );
+
+      console.log(chalk.green("\n  ✓ API key saved successfully!"));
+      console.log(chalk.gray("  You are ready to use explainit\n"));
+    });
+  });
+
+// ─────────────────────────────────────────────────────────────
 // 🎉 explainit install — setup git pre-commit hook
 // ─────────────────────────────────────────────────────────────
 program
