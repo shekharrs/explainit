@@ -415,7 +415,7 @@ exit 0
     fs.chmodSync(hookPath, "755");
 
     const runnerPath = path.resolve("run-quiz.js");
-    const runner = `import { runQuiz } from './lib/quiz.js';
+    const runner = `import { runQuiz } from './node_modules/explainit/lib/quiz.js';
 const file = process.argv[2];
 if (file) await runQuiz([file]);
 `;
