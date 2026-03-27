@@ -1,6 +1,6 @@
 {
   "name": "explainit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "🧠 AI-powered CLI that quizzes you on your code before you commit",
   "main": "bin/explainit.js",
   "bin": {
