@@ -15,10 +15,14 @@
     "developer-tools",
     "ai",
     "git",
+    "git-hooks",
     "productivity",
     "learning",
     "code-review",
-    "education"
+    "education",
+    "gemini",
+    "quiz",
+    "pre-commit"
   ],
   "author": "Shekhar",
   "license": "MIT",
@@ -32,7 +36,9 @@
   "homepage": "https://github.com/shekharrs/explainit#readme",
   "files": [
     "bin/explainit.js",
-    "lib",
+    "lib/ai.js",
+    "lib/quiz.js",
+    "lib/scores.js",
     "run-quiz.js",
     "README.md",
     "LICENSE"
@@ -44,8 +50,6 @@
     "@google/generative-ai": "^0.24.1",
     "chalk": "^5.6.2",
     "commander": "^14.0.3",
-    "dotenv": "^17.3.1",
-    "inquirer": "^13.3.2",
     "ora": "^9.3.0"
   }
 }
