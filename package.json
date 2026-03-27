@@ -4,7 +4,7 @@
   "description": "🧠 AI-powered CLI that quizzes you on your code before you commit",
   "main": "bin/explainit.js",
   "bin": {
-    "explainit": "./bin/explainit.js"
+    "explainit": "bin/explainit.js"
   },
   "type": "module",
   "scripts": {
@@ -28,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shekharrs/explainit.git"
+    "url": "git+https://github.com/shekharrs/explainit.git"
   },
   "bugs": {
     "url": "https://github.com/shekharrs/explainit/issues"
