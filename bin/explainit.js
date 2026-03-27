@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import readline from "readline";
+import { readScores, getStreak } from "../lib/scores.js";
 
 const program = new Command();
 
@@ -164,7 +165,8 @@ program
   .action((file) => {
     showHeader();
     console.log(
-      "  " + t.brand("◆") + " " + t.white("generating quiz from") + " " + t.accent(file) + t.muted(" ...")
+      "  " + t.brand("◆") + " " + t.white("generating quiz from") +
+      " " + t.accent(file) + t.muted(" ...")
     );
     console.log();
     console.log("  " + t.muted("powered by gemini 🔥"));
@@ -181,7 +183,122 @@ program
   .action(() => {
     showHeader();
     section("your stats");
-    console.log("  " + t.muted("no quizzes yet — make a commit to start! 🚀"));
+
+    const scores = readScores();
+
+    // no scores yet
+    if (!scores.length) {
+      console.log(
+        "  " + t.muted("no quizzes yet — make a commit to start! 🚀")
+      );
+      console.log();
+      return;
+    }
+
+    // calculate stats
+    const total = scores.length;
+    const correct = scores.filter((s) => s.correct).length;
+    const incorrect = total - correct;
+    const percent = Math.round((correct / total) * 100);
+    const streak = getStreak(scores);
+
+    // recent 5 sessions
+    const recent = scores.slice(-5).reverse();
+
+    // file breakdown
+    const fileCounts = {};
+    scores.forEach((s) => {
+      fileCounts[s.file] = (fileCounts[s.file] || 0) + 1;
+    });
+    const topFiles = Object.entries(fileCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3);
+
+    // ── summary ───────────────────────────────────
+    console.log();
+    console.log(
+      "  " + t.brand("total quizzes  ") +
+      t.white(chalk.bold(String(total).padEnd(6))) +
+      t.accent("correct  ") +
+      t.white(chalk.bold(String(correct).padEnd(6))) +
+      t.danger("wrong  ") +
+      t.white(chalk.bold(String(incorrect)))
+    );
+
+    console.log();
+    console.log(
+      "  " + t.info("score  ") +
+      (percent >= 70
+        ? t.success(chalk.bold(`${percent}%`))
+        : t.danger(chalk.bold(`${percent}%`))) +
+      "   " +
+      t.brand("streak  ") +
+      t.hot(chalk.bold(`${streak} day${streak !== 1 ? "s" : ""}`))
+    );
+
+    // ── progress bar ──────────────────────────────
+    console.log();
+    const barLength = 30;
+    const filled = Math.round((correct / total) * barLength);
+    const empty = barLength - filled;
+    const bar =
+      t.success("█".repeat(filled)) +
+      t.muted("░".repeat(empty));
+    console.log("  " + bar + "  " + t.muted(`${percent}%`));
+
+    // ── recent activity ───────────────────────────
+    section("recent activity");
+
+    recent.forEach((s) => {
+      const date = new Date(s.date);
+      const dateStr = date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      const icon = s.correct ? t.success("✓") : t.danger("✗");
+      const fileName = path.basename(s.file);
+      const q =
+        s.question.length > 40
+          ? s.question.slice(0, 40) + "..."
+          : s.question;
+
+      console.log(
+        "  " + icon +
+        "  " + t.white(fileName.padEnd(20)) +
+        t.muted(dateStr.padEnd(20)) +
+        t.muted(q)
+      );
+    });
+
+    // ── top files ─────────────────────────────────
+    if (topFiles.length > 0) {
+      section("most quizzed files");
+
+      topFiles.forEach(([file, count]) => {
+        const fileName = path.basename(file);
+        const fileScores = scores.filter((s) => s.file === file);
+        const fileCorrect = fileScores.filter((s) => s.correct).length;
+        const filePct = Math.round((fileCorrect / fileScores.length) * 100);
+        const pctColor = filePct >= 70 ? t.success : t.danger;
+
+        console.log(
+          "  " + t.brand("◆") +
+          "  " + t.white(fileName.padEnd(25)) +
+          t.muted(`${count} quiz${count > 1 ? "zes" : ""}`.padEnd(12)) +
+          pctColor(`${filePct}% correct`)
+        );
+      });
+    }
+
+    // ── footer ────────────────────────────────────
+    console.log();
+    console.log(
+      "  " + t.muted("scores saved at") +
+      " " + t.info(path.join(os.homedir(), ".explainit", "scores.json"))
+    );
     console.log();
   });
 
