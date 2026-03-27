@@ -28,6 +28,7 @@
 ---
 
 ## 🎯 the problem
+
 ```bash
 # you copy this from ChatGPT
 function generateToken(user, secret, expiresIn) {
@@ -47,10 +48,12 @@ git commit -m "add auth"
 ---
 
 ## ✨ how it works
+
 ```bash
 git add .
 git commit -m "add auth"
 ```
+
 ```
 🧠 explainit — quick check before commit
 ──────────────────────────────────────────
@@ -71,6 +74,7 @@ One question. Fifteen seconds. You just learned something about the code you're 
 ---
 
 ## 🚀 install
+
 ```bash
 npm install -g explainit
 ```
@@ -83,16 +87,18 @@ npm install -g explainit
 
 **step 1 — get a free Gemini API key**
 
-> [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → sign in with Google → **Create API key** → copy it
+> [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → sign in with Google → **Create API key in new project** → copy it
 
 completely free · no credit card required · 1,500 requests/day per user
 
 **step 2 — connect your key**
+
 ```bash
 explainit setup
 ```
 
 **step 3 — hook into git**
+
 ```bash
 explainit install
 ```
@@ -114,6 +120,7 @@ explainit install
 ---
 
 ## 🔄 full workflow
+
 ```
 git add .
     ↓
@@ -121,7 +128,7 @@ git commit
     ↓
 explainit detects changed files
     ↓
-skips small changes (< 15 lines) ──→ commit goes through silently ✓
+skips files with no changes ──→ commit goes through silently ✓
     ↓
 Gemini reads your code
     ↓
@@ -140,9 +147,11 @@ commit goes through regardless ✓
 ---
 
 ## 📊 track your progress
+
 ```bash
 explainit score
 ```
+
 ```
   ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗
   ...
@@ -169,7 +178,23 @@ explainit score
 
 ---
 
+## 🔑 api key — per user, always free
+
+explainit uses a **bring your own key** model.
+
+each user provides their own free Gemini API key. this means:
+
+- ✓ no shared quota — your usage never affects anyone else
+- ✓ completely free — 1,500 requests/day is more than enough
+- ✓ scales to any number of users
+- ✓ your key is stored locally at `~/.explainit/config.json`
+
+get your free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+
+---
+
 ## 🏗️ architecture
+
 ```
 explainit/
 ├── bin/
@@ -183,21 +208,6 @@ explainit/
 ```
 
 scores are saved locally at `~/.explainit/scores.json` — nothing leaves your machine except API calls to Gemini.
-
----
-
-## 🔑 api key — per user, always free
-
-explainit uses a **bring your own key** model.
-
-each user provides their own free Gemini API key. this means:
-
-- ✓ no shared quota — your usage never affects anyone else
-- ✓ completely free — 1,500 requests/day is more than enough
-- ✓ scales to any number of users
-- ✓ your key is stored locally at `~/.explainit/config.json`
-
-get your free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
 ---
 
@@ -216,6 +226,7 @@ get your free key at [aistudio.google.com/apikey](https://aistudio.google.com/ap
 ## 🤝 contributing
 
 contributions, issues and feature requests are welcome!
+
 ```bash
 # clone the repo
 git clone https://github.com/shekharrs/explainit.git
