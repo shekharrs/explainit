@@ -1,6 +1,6 @@
-function addSum(a,b) {
-    return a + b;
+const addToMultiply = (a,b) => {
+    return a * b;
 }
 
-let sum = addSum(2+2);
-console.log(sum)
+const result = addToMultiply(3, 2);
+console.log(result);
