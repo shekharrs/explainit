@@ -28,7 +28,6 @@
 ---
 
 ## 🎯 the problem
-
 ```bash
 # you copy this from ChatGPT
 function generateToken(user, secret, expiresIn) {
@@ -48,12 +47,10 @@ git commit -m "add auth"
 ---
 
 ## ✨ how it works
-
 ```bash
 git add .
 git commit -m "add auth"
 ```
-
 ```
 🧠 explainit — quick check before commit
 ──────────────────────────────────────────
@@ -74,7 +71,6 @@ One question. Fifteen seconds. You just learned something about the code you're 
 ---
 
 ## 🚀 install
-
 ```bash
 npm install -g explainit
 ```
@@ -83,27 +79,86 @@ npm install -g explainit
 
 ---
 
-## ⚡ quick start
+## ⚡ quick start — 4 steps, under 2 minutes
 
-**step 1 — get a free Gemini API key**
+**step 1 — install**
+```bash
+npm install -g explainit
+```
+
+**step 2 — get a free Gemini API key**
 
 > [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → sign in with Google → **Create API key in new project** → copy it
 
 completely free · no credit card required · 1,500 requests/day per user
 
-**step 2 — connect your key**
-
+**step 3 — connect your key**
 ```bash
 explainit setup
 ```
+```
+▸ setup — gemini api key
+  ────────────────────────────────────────────
+  get your free key at:
+  → https://aistudio.google.com/apikey
 
-**step 3 — hook into git**
+  steps:
+    1. sign in with google
+    2. click 'create api key in new project'
+    3. copy and paste below
 
+  ◆ paste your gemini key: ████████████████████
+
+  ✓ api key saved!
+  you're all set — run explainit install to hook into git
+```
+
+**step 4 — hook into git**
 ```bash
 explainit install
 ```
+```
+▸ installing git hook
+  ────────────────────────────────────────────
+  ✓ git hook installed
+  ✓ run-quiz.js created
 
-**that's it.** every `git commit` now triggers a quiz automatically.
+  ◆ every git commit will now trigger a quiz automatically
+```
+
+**you're done.** every `git commit` from now on will trigger a quiz automatically.
+
+---
+
+## 🔄 full workflow
+```
+npm i -g explainit
+        ↓
+explainit setup      ← paste your free Gemini API key
+        ↓
+explainit install    ← hooks into your git repo
+        ↓
+git add .
+        ↓
+git commit -m "your message"
+        ↓
+explainit detects changed files
+        ↓
+skips small changes ──→ commit goes through silently ✓
+        ↓
+Gemini reads your code
+        ↓
+1 question appears in terminal
+        ↓
+you type your answer
+        ↓
+instant AI feedback
+        ↓
+commit goes through regardless ✓
+```
+
+> **explainit never blocks your commit.**
+> it only teaches. adoption comes from being useful, not forceful.
 
 ---
 
@@ -119,43 +174,11 @@ explainit install
 
 ---
 
-## 🔄 full workflow
-
-```
-git add .
-    ↓
-git commit
-    ↓
-explainit detects changed files
-    ↓
-skips files with no changes ──→ commit goes through silently ✓
-    ↓
-Gemini reads your code
-    ↓
-1 question appears in terminal
-    ↓
-you type your answer
-    ↓
-instant AI feedback
-    ↓
-commit goes through regardless ✓
-```
-
-> **explainit never blocks your commit.**
-> it only teaches. adoption comes from being useful, not forceful.
-
----
-
 ## 📊 track your progress
-
 ```bash
 explainit score
 ```
-
 ```
-  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗
-  ...
-
   total quizzes  12     correct  9      wrong  3
 
   score  75%   streak  4 days
@@ -188,13 +211,13 @@ each user provides their own free Gemini API key. this means:
 - ✓ completely free — 1,500 requests/day is more than enough
 - ✓ scales to any number of users
 - ✓ your key is stored locally at `~/.explainit/config.json`
+- ✓ nothing leaves your machine except API calls to Gemini
 
 get your free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
 ---
 
 ## 🏗️ architecture
-
 ```
 explainit/
 ├── bin/
@@ -203,11 +226,9 @@ explainit/
 │   ├── ai.js             ← Gemini API — generate & evaluate
 │   ├── quiz.js           ← quiz loop — questions & answers
 │   └── scores.js         ← local score storage & streak logic
-├── run-quiz.js           ← git hook bridge (auto-created)
+├── run-quiz.js           ← git hook bridge (auto-created on install)
 └── package.json
 ```
-
-scores are saved locally at `~/.explainit/scores.json` — nothing leaves your machine except API calls to Gemini.
 
 ---
 
@@ -226,7 +247,6 @@ scores are saved locally at `~/.explainit/scores.json` — nothing leaves your m
 ## 🤝 contributing
 
 contributions, issues and feature requests are welcome!
-
 ```bash
 # clone the repo
 git clone https://github.com/shekharrs/explainit.git
@@ -239,17 +259,18 @@ npm install
 npm link
 
 # test your changes
+explainit setup
+explainit install
 explainit scan bin/explainit.js
-explainit quiz bin/explainit.js
 explainit score
 ```
 
 **to contribute:**
 
 1. fork the project
-2. create your branch &nbsp;`git checkout -b feature/amazing-feature`
+2. create your branch &nbsp;&nbsp;`git checkout -b feature/amazing-feature`
 3. commit your changes &nbsp;`git commit -m "add amazing feature"`
-4. push to the branch &nbsp;`git push origin feature/amazing-feature`
+4. push to the branch &nbsp;&nbsp;&nbsp;`git push origin feature/amazing-feature`
 5. open a pull request
 
 ---
@@ -261,6 +282,7 @@ explainit score
 - [x] answer evaluation with instant feedback
 - [x] local score tracking and streak system
 - [x] per-user API key — bring your own key model
+- [x] first-time setup wizard
 - [ ] VS Code extension
 - [ ] support for more languages (Go, Rust, Java)
 - [ ] team leaderboard mode
