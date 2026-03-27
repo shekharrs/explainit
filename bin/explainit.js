@@ -13,15 +13,15 @@ const program = new Command();
 // 🎨 THEME
 // ─────────────────────────────────────────────────────────────
 const t = {
-  brand:   (s) => chalk.hex("#A78BFA")(s),      // soft purple
-  accent:  (s) => chalk.hex("#34D399")(s),      // mint green
-  hot:     (s) => chalk.hex("#FB923C")(s),      // orange
-  info:    (s) => chalk.hex("#60A5FA")(s),      // blue
-  muted:   (s) => chalk.hex("#6B7280")(s),      // gray
-  dim:     (s) => chalk.hex("#374151")(s),      // dark gray
-  white:   (s) => chalk.hex("#F9FAFB")(s),      // near white
-  success: (s) => chalk.hex("#4ADE80")(s),      // green
-  danger:  (s) => chalk.hex("#F87171")(s),      // red
+  brand:   (s) => chalk.hex("#A78BFA")(s),
+  accent:  (s) => chalk.hex("#34D399")(s),
+  hot:     (s) => chalk.hex("#FB923C")(s),
+  info:    (s) => chalk.hex("#60A5FA")(s),
+  muted:   (s) => chalk.hex("#6B7280")(s),
+  dim:     (s) => chalk.hex("#374151")(s),
+  white:   (s) => chalk.hex("#F9FAFB")(s),
+  success: (s) => chalk.hex("#4ADE80")(s),
+  danger:  (s) => chalk.hex("#F87171")(s),
   bold:    (s) => chalk.bold(s),
 };
 
@@ -30,46 +30,26 @@ const t = {
 // ─────────────────────────────────────────────────────────────
 function showHeader() {
   console.log();
-  console.log(
-    t.brand("  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗")
-  );
-  console.log(
-    t.brand("  ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔══██╗██║████╗  ██║██║╚══██╔══╝")
-  );
-  console.log(
-    t.accent("  █████╗   ╚███╔╝ ██████╔╝██║     ███████║██║██╔██╗ ██║██║   ██║   ")
-  );
-  console.log(
-    t.accent("  ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██╔══██║██║██║╚██╗██║██║   ██║   ")
-  );
-  console.log(
-    t.hot("  ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║██║ ╚████║██║   ██║   ")
-  );
-  console.log(
-    t.hot("  ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   ")
-  );
+  console.log(t.brand("  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗"));
+  console.log(t.brand("  ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔══██╗██║████╗  ██║██║╚══██╔══╝"));
+  console.log(t.accent("  █████╗   ╚███╔╝ ██████╔╝██║     ███████║██║██╔██╗ ██║██║   ██║   "));
+  console.log(t.accent("  ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██╔══██║██║██║╚██╗██║██║   ██║   "));
+  console.log(t.hot("  ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║██║ ╚████║██║   ██║   "));
+  console.log(t.hot("  ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   "));
   console.log();
-  console.log(
-    t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-  );
+  console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
   console.log(
     "  " + t.muted("by") + " " + t.brand("@explainit") +
     t.muted("  ·  ") + t.accent("quiz your code") +
     t.muted("  ·  ") + t.info("v1.0.0")
   );
-  console.log(
-    t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-  );
+  console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
   console.log();
 }
 
 // ─────────────────────────────────────────────────────────────
 // 🧱 UI HELPERS
 // ─────────────────────────────────────────────────────────────
-function tag(label, color = t.brand) {
-  return color(" " + label + " ");
-}
-
 function section(title) {
   console.log();
   console.log("  " + t.brand("▸") + " " + t.white(chalk.bold(title)));
@@ -77,9 +57,7 @@ function section(title) {
 }
 
 function row(icon, label, value = "") {
-  console.log(
-    "  " + icon + "  " + t.white(label.padEnd(20)) + t.muted(value)
-  );
+  console.log("  " + icon + "  " + t.white(label.padEnd(20)) + t.muted(value));
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -101,7 +79,6 @@ program.configureOutput({
   writeErr: (str) => process.stdout.write(str),
 });
 
-// custom help
 program.addHelpText("beforeAll", () => {
   showHeader();
   return "";
@@ -117,7 +94,7 @@ program.addHelpText(
     "  " + t.accent("  scan  ") + t.muted("│") + "  " + t.white("scan a file and preview its contents"),
     "  " + t.info("  quiz  ") + t.muted("│") + "  " + t.white("generate an AI quiz from your code"),
     "  " + t.hot(" score  ") + t.muted("│") + "  " + t.white("view your quiz history and score"),
-    "  " + t.brand(" setup  ") + t.muted("│") + "  " + t.white("connect your Gemini API key"),
+    "  " + t.brand(" setup  ") + t.muted("│") + "  " + t.white("connect your OpenRouter API key"),
     "  " + t.brand("install ") + t.muted("│") + "  " + t.white("hook into git — auto-quiz on commit"),
     "",
     "  " + t.muted("┄".repeat(44)),
@@ -144,9 +121,7 @@ program
     const filePath = path.resolve(file);
 
     if (!fs.existsSync(filePath)) {
-      console.log(
-        "  " + t.danger("✗") + " " + t.white("file not found:") + " " + t.hot(file)
-      );
+      console.log("  " + t.danger("✗") + " " + t.white("file not found:") + " " + t.hot(file));
       console.log();
       process.exit(1);
     }
@@ -192,7 +167,7 @@ program
       "  " + t.brand("◆") + " " + t.white("generating quiz from") + " " + t.accent(file) + t.muted(" ...")
     );
     console.log();
-    console.log("  " + t.muted("gemini integration active 🔥"));
+    console.log("  " + t.muted("powered by openrouter 🔥"));
     console.log();
   });
 
@@ -215,7 +190,7 @@ program
 // ─────────────────────────────────────────────────────────────
 program
   .command("setup")
-  .description("connect your Gemini API key")
+  .description("connect your OpenRouter API key")
   .action(() => {
     const CONFIG_DIR = path.join(os.homedir(), ".explainit");
     const CONFIG_FILE = path.join(CONFIG_DIR, "config.json");
@@ -226,18 +201,32 @@ program
     });
 
     showHeader();
-    section("setup — gemini api key");
-    console.log("  " + t.muted("get a free key at:"));
-    console.log("  " + t.info("→") + " " + t.accent("https://aistudio.google.com/apikey"));
+    section("setup — openrouter api key");
+
+    console.log("  " + t.muted("get your free key at:"));
+    console.log("  " + t.info("→") + " " + t.accent("https://openrouter.ai/keys"));
+    console.log();
+    console.log("  " + t.muted("steps:"));
+    console.log("  " + t.muted("  1. sign in with google"));
+    console.log("  " + t.muted("  2. click 'create key'"));
+    console.log("  " + t.muted("  3. copy and paste below"));
     console.log();
 
     rl.question(
-      "  " + t.brand("◆") + " " + t.white("paste your api key: "),
+      "  " + t.brand("◆") + " " + t.white("paste your openrouter key: "),
       (key) => {
         rl.close();
+
         if (!key.trim()) {
           console.log();
           console.log("  " + t.danger("✗") + " " + t.white("no key entered — try again"));
+          console.log();
+          return;
+        }
+
+        if (!key.trim().startsWith("sk-or-")) {
+          console.log();
+          console.log("  " + t.danger("✗") + " " + t.white("invalid key — openrouter keys start with") + " " + t.hot("sk-or-"));
           console.log();
           return;
         }
@@ -248,12 +237,16 @@ program
 
         fs.writeFileSync(
           CONFIG_FILE,
-          JSON.stringify({ geminiApiKey: key.trim() }, null, 2)
+          JSON.stringify({ apiKey: key.trim() }, null, 2)
         );
 
         console.log();
         console.log("  " + t.success("✓") + " " + t.white("api key saved!"));
-        console.log("  " + t.muted("you're all set — run") + " " + t.accent("explainit install") + " " + t.muted("to hook into git"));
+        console.log(
+          "  " + t.muted("you're all set — run") +
+          " " + t.accent("explainit install") +
+          " " + t.muted("to hook into git")
+        );
         console.log();
       }
     );
@@ -271,6 +264,12 @@ program
 
     showHeader();
     section("installing git hook");
+
+    if (!fs.existsSync(path.resolve(".git"))) {
+      console.log("  " + t.danger("✗") + " " + t.white("no git repo found — run") + " " + t.hot("git init") + " " + t.white("first"));
+      console.log();
+      process.exit(1);
+    }
 
     const script = `#!/bin/sh
 
@@ -303,7 +302,8 @@ if (file) await runQuiz([file]);
     console.log("  " + t.success("✓") + " " + t.white("run-quiz.js created"));
     console.log();
     console.log(
-      "  " + t.brand("◆") + " " + t.white("every") + " " + t.accent("git commit") +
+      "  " + t.brand("◆") + " " + t.white("every") +
+      " " + t.accent("git commit") +
       " " + t.white("will now trigger a quiz automatically")
     );
     console.log();
