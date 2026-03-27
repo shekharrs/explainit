@@ -94,7 +94,7 @@ program.addHelpText(
     "  " + t.accent("  scan  ") + t.muted("│") + "  " + t.white("scan a file and preview its contents"),
     "  " + t.info("  quiz  ") + t.muted("│") + "  " + t.white("generate an AI quiz from your code"),
     "  " + t.hot(" score  ") + t.muted("│") + "  " + t.white("view your quiz history and score"),
-    "  " + t.brand(" setup  ") + t.muted("│") + "  " + t.white("connect your OpenRouter API key"),
+    "  " + t.brand(" setup  ") + t.muted("│") + "  " + t.white("connect your Gemini API key"),
     "  " + t.brand("install ") + t.muted("│") + "  " + t.white("hook into git — auto-quiz on commit"),
     "",
     "  " + t.muted("┄".repeat(44)),
@@ -167,7 +167,7 @@ program
       "  " + t.brand("◆") + " " + t.white("generating quiz from") + " " + t.accent(file) + t.muted(" ...")
     );
     console.log();
-    console.log("  " + t.muted("powered by openrouter 🔥"));
+    console.log("  " + t.muted("powered by gemini 🔥"));
     console.log();
   });
 
@@ -190,7 +190,7 @@ program
 // ─────────────────────────────────────────────────────────────
 program
   .command("setup")
-  .description("connect your OpenRouter API key")
+  .description("connect your Gemini API key")
   .action(() => {
     const CONFIG_DIR = path.join(os.homedir(), ".explainit");
     const CONFIG_FILE = path.join(CONFIG_DIR, "config.json");
@@ -201,19 +201,19 @@ program
     });
 
     showHeader();
-    section("setup — openrouter api key");
+    section("setup — gemini api key");
 
     console.log("  " + t.muted("get your free key at:"));
-    console.log("  " + t.info("→") + " " + t.accent("https://openrouter.ai/keys"));
+    console.log("  " + t.info("→") + " " + t.accent("https://aistudio.google.com/apikey"));
     console.log();
     console.log("  " + t.muted("steps:"));
     console.log("  " + t.muted("  1. sign in with google"));
-    console.log("  " + t.muted("  2. click 'create key'"));
+    console.log("  " + t.muted("  2. click 'create api key in new project'"));
     console.log("  " + t.muted("  3. copy and paste below"));
     console.log();
 
     rl.question(
-      "  " + t.brand("◆") + " " + t.white("paste your openrouter key: "),
+      "  " + t.brand("◆") + " " + t.white("paste your gemini key: "),
       (key) => {
         rl.close();
 
@@ -224,9 +224,12 @@ program
           return;
         }
 
-        if (!key.trim().startsWith("sk-or-")) {
+        if (!key.trim().startsWith("AIzaSy")) {
           console.log();
-          console.log("  " + t.danger("✗") + " " + t.white("invalid key — openrouter keys start with") + " " + t.hot("sk-or-"));
+          console.log(
+            "  " + t.danger("✗") + " " + t.white("invalid key — gemini keys start with") +
+            " " + t.hot("AIzaSy")
+          );
           console.log();
           return;
         }
@@ -266,7 +269,10 @@ program
     section("installing git hook");
 
     if (!fs.existsSync(path.resolve(".git"))) {
-      console.log("  " + t.danger("✗") + " " + t.white("no git repo found — run") + " " + t.hot("git init") + " " + t.white("first"));
+      console.log(
+        "  " + t.danger("✗") + " " + t.white("no git repo found — run") +
+        " " + t.hot("git init") + " " + t.white("first")
+      );
       console.log();
       process.exit(1);
     }
