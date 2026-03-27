@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&pause=1000&color=A78BFA&center=true&vCenter=true&width=600&lines=explainit+-+Quiz+yourself+on+code+before+you+commit+it+%F0%9F%8E%89" alt="explainit" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&pause=1000&color=A78BFA&center=true&vCenter=true&width=435&lines=explainit" alt="explainit" />
 
 <br />
 <br />
