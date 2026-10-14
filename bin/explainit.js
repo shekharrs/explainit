@@ -79,9 +79,31 @@ program
   .description(t.brand("🧠 test your code comprehension before it ships"))
   .version(t.accent("2.0.0"), "-V, --version");
 
+const COMMAND_HELP_MAP = {
+  explain: { name: "explain|exp", args: "[file name]" },
+  msg:     { name: "msg|m",        args: "" },
+  quiz:    { name: "quiz|q",       args: "[file name]" },
+  score:   { name: "score|sc",     args: "" },
+  scan:    { name: "scan|s",       args: "<file name>" },
+  setup:   { name: "setup",        args: "" },
+  install: { name: "install",      args: "" },
+  help:    { name: "help",         args: "[command]" },
+};
+
 program.configureHelp({
-  optionTerm: (option) => option.flags,
-  commandDescription: (cmd) => cmd.description(),
+  helpWidth: 105,
+  styleTitle: (str) => t.brand(chalk.bold(str)),
+  styleOptionTerm: (term) => t.accent(term),
+  styleOptionDescription: (desc) => t.white(desc),
+  subcommandTerm: (cmd) => {
+    const info = COMMAND_HELP_MAP[cmd.name()];
+    if (!info) return cmd.name();
+    const prefix = t.brand("explainit ");
+    const name = t.accent(chalk.bold(info.name));
+    const args = info.args ? " " + t.hot(info.args) : "";
+    return prefix + name + args;
+  },
+  styleSubcommandDescription: (desc) => t.white(desc),
 });
 
 program.addHelpText("beforeAll", () => {
@@ -94,23 +116,12 @@ program.addHelpText(
   [
     "",
     "  " + t.muted("┄".repeat(44)),
-    "  " + t.brand("✦") + "  " + t.white("commands"),
+    "  " + t.brand("✦") + "  " + t.white(chalk.bold("examples")),
     "",
-    "  " + t.accent("  explain  ") + t.muted("│") + "  " + t.white("break down staged changes, key decisions, and risks"),
-    "  " + t.info("  msg      ") + t.muted("│") + "  " + t.white("generate conventional commit message from diff"),
-    "  " + t.accent("  quiz     ") + t.muted("│") + "  " + t.white("quiz yourself on staged changes or a file"),
-    "  " + t.hot("  score    ") + t.muted("│") + "  " + t.white("view your progress, score, and streak"),
-    "  " + t.brand("  install  ") + t.muted("│") + "  " + t.white("hook into git — auto-check on commit"),
-    "  " + t.brand("  setup    ") + t.muted("│") + "  " + t.white("connect your free Gemini API key"),
-    "  " + t.muted("  scan     ") + t.muted("│") + "  " + t.white("preview a file and its line stats"),
-    "",
-    "  " + t.muted("┄".repeat(44)),
-    "  " + t.brand("✦") + "  " + t.white("examples"),
-    "",
-    "  " + t.muted("$") + "  " + t.accent("explainit explain") + t.muted("          # explain staged git diff"),
-    "  " + t.muted("$") + "  " + t.accent("git commit -m \"$(explainit msg)\"") + t.muted(" # auto commit message"),
-    "  " + t.muted("$") + "  " + t.accent("explainit quiz") + t.muted("             # run comprehension check"),
-    "  " + t.muted("$") + "  " + t.accent("explainit score") + t.muted("            # check your stats"),
+    "  " + t.muted("$") + "  " + t.accent("explainit explain") + t.muted("          # break down staged changes and risks"),
+    "  " + t.muted("$") + "  " + t.accent("git commit -m \"$(explainit msg)\"") + t.muted(" # auto conventional commit"),
+    "  " + t.muted("$") + "  " + t.accent("explainit quiz") + t.muted("             # run 1-key comprehension check"),
+    "  " + t.muted("$") + "  " + t.accent("explainit score") + t.muted("            # check your stats and streak"),
     "",
   ].join("\n")
 );
@@ -254,18 +265,44 @@ program
 // ─────────────────────────────────────────────────────────────
 // 📊 score
 // ─────────────────────────────────────────────────────────────
+function getExistingFilePath(filePath) {
+  if (!filePath) return null;
+  const rel = path.resolve(process.cwd(), filePath);
+  if (fs.existsSync(rel) && fs.statSync(rel).isFile()) {
+    return path.relative(process.cwd(), rel).replace(/\\/g, "/");
+  }
+  if (path.isAbsolute(filePath) && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    const fromCwd = path.relative(process.cwd(), filePath).replace(/\\/g, "/");
+    if (!fromCwd.startsWith("..")) {
+      return fromCwd;
+    }
+  }
+  return null;
+}
+
 program
   .command("score")
   .alias("sc")
+  .option("-a, --all", "show all history including deleted or external files")
   .description("view your quiz history and score")
-  .action(() => {
+  .action((options) => {
     showHeader();
     section("your stats");
 
-    const scores = readScores();
+    const allScores = readScores();
+
+    // Dynamically filter to only include files that currently exist in the codebase
+    const scores = options.all
+      ? allScores
+      : allScores
+          .map((s) => ({
+            ...s,
+            resolvedPath: getExistingFilePath(s.file),
+          }))
+          .filter((s) => s.resolvedPath !== null);
 
     if (!scores.length) {
-      console.log("  " + t.muted("no checks yet — make a commit or run explainit quiz! 🚀"));
+      console.log("  " + t.muted("no checks for current codebase yet — make a commit or run explainit quiz! 🚀"));
       console.log();
       return;
     }
@@ -280,7 +317,8 @@ program
 
     const fileCounts = {};
     scores.forEach((s) => {
-      fileCounts[s.file] = (fileCounts[s.file] || 0) + 1;
+      const displayFile = s.resolvedPath || s.file.replace(/\\/g, "/");
+      fileCounts[displayFile] = (fileCounts[displayFile] || 0) + 1;
     });
     const topFiles = Object.entries(fileCounts)
       .sort((a, b) => b[1] - a[1])
@@ -328,7 +366,7 @@ program
       });
 
       const icon = s.correct ? t.success("✓") : t.danger("✗");
-      const fileName = path.basename(s.file);
+      const displayFile = s.resolvedPath || path.basename(s.file);
       const q =
         s.question && s.question.length > 40
           ? s.question.slice(0, 40) + "..."
@@ -336,7 +374,7 @@ program
 
       console.log(
         "  " + icon +
-        "  " + t.white(fileName.padEnd(20)) +
+        "  " + t.white(displayFile.padEnd(20)) +
         t.muted(dateStr.padEnd(20)) +
         t.muted(q)
       );
@@ -345,16 +383,15 @@ program
     if (topFiles.length > 0) {
       section("most checked files");
 
-      topFiles.forEach(([file, count]) => {
-        const fileName = path.basename(file);
-        const fileScores = scores.filter((s) => s.file === file);
+      topFiles.forEach(([displayFile, count]) => {
+        const fileScores = scores.filter((s) => (s.resolvedPath || s.file.replace(/\\/g, "/")) === displayFile);
         const fileCorrect = fileScores.filter((s) => s.correct).length;
         const filePct = Math.round((fileCorrect / fileScores.length) * 100);
         const pctColor = filePct >= 70 ? t.success : t.danger;
 
         console.log(
           "  " + t.brand("◆") +
-          "  " + t.white(fileName.padEnd(25)) +
+          "  " + t.white(displayFile.padEnd(25)) +
           t.muted(`${count} check${count > 1 ? "s" : ""}`.padEnd(12)) +
           pctColor(`${filePct}% correct`)
         );
@@ -512,8 +549,21 @@ exit 0
     } catch {}
 
     const runnerPath = path.resolve("run-quiz.js");
-    const runner = `import { runQuiz } from './lib/quiz.js';
-await runQuiz();
+    const runner = `// explainit pre-commit runner
+try {
+  const { runQuiz } = await import("explainit/lib/quiz.js");
+  await runQuiz();
+} catch {
+  try {
+    const { runQuiz } = await import("./lib/quiz.js");
+    await runQuiz();
+  } catch {
+    const { execSync } = await import("child_process");
+    try {
+      execSync("explainit pre-commit", { stdio: "inherit" });
+    } catch {}
+  }
+}
 `;
     fs.writeFileSync(runnerPath, runner);
 
