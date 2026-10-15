@@ -41,23 +41,27 @@ const t = {
 // ─────────────────────────────────────────────────────────────
 // 🖼️  HEADER
 // ─────────────────────────────────────────────────────────────
-function showHeader() {
-  console.log();
-  console.log(t.brand("  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗"));
-  console.log(t.brand("  ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔══██╗██║████╗  ██║██║╚══██╔══╝"));
-  console.log(t.accent("  █████╗   ╚███╔╝ ██████╔╝██║     ███████║██║██╔██╗ ██║██║   ██║   "));
-  console.log(t.accent("  ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██╔══██║██║██║╚██╗██║██║   ██║   "));
-  console.log(t.hot("  ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║██║ ╚████║██║   ██║   "));
-  console.log(t.hot("  ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   "));
-  console.log();
-  console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
+function showHeader(compact = false) {
+  if (!compact) {
+    console.log();
+    console.log(t.brand("  ███████╗██╗  ██╗██████╗ ██╗      █████╗ ██╗███╗   ██╗██╗████████╗"));
+    console.log(t.brand("  ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔══██╗██║████╗  ██║██║╚══██╔══╝"));
+    console.log(t.accent("  █████╗   ╚███╔╝ ██████╔╝██║     ███████║██║██╔██╗ ██║██║   ██║   "));
+    console.log(t.accent("  ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██╔══██║██║██║╚██╗██║██║   ██║   "));
+    console.log(t.hot("  ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║██║ ╚████║██║   ██║   "));
+    console.log(t.hot("  ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   "));
+    console.log();
+    console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
+  }
   console.log(
-    "  " + t.muted("by") + " " + t.brand("@explainit") +
+    "  " + t.brand("🧠 explainit") +
     t.muted("  ·  ") + t.accent("understand your code") +
     t.muted("  ·  ") + t.info("v2.0.0")
   );
-  console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
-  console.log();
+  if (!compact) {
+    console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
+    console.log();
+  }
 }
 
 function section(title) {
@@ -134,7 +138,7 @@ program
   .alias("exp")
   .description("break down staged changes, key decisions, and risks")
   .action(async (file) => {
-    showHeader();
+    showHeader(true);
 
     let diff = "";
     let contextTitle = "";
@@ -170,12 +174,8 @@ program
       return;
     }
 
-    const { default: ora } = await import("ora");
-    const spinner = ora(chalk.hex("#60A5FA")("  Analyzing changes...")).start();
-
     try {
       const explanation = await explainDiffContent(trimDiff(diff, 6000), contextTitle);
-      spinner.stop();
 
       if (!explanation) {
         console.log("  " + t.danger("✗") + " " + t.white("Could not generate explanation."));
@@ -206,7 +206,6 @@ program
         console.log();
       }
     } catch (err) {
-      spinner.stop();
       console.log("  " + t.danger("✗") + " " + t.white(`Failed to explain: ${err.message}`));
       console.log();
     }
@@ -246,7 +245,7 @@ program
   .alias("q")
   .description("quiz yourself on staged changes or a file")
   .action(async (file) => {
-    showHeader();
+    showHeader(true);
     const files = file ? [file] : null;
     await runQuiz(files, true);
   });
@@ -286,7 +285,7 @@ program
   .option("-a, --all", "show all history including deleted or external files")
   .description("view your quiz history and score")
   .action((options) => {
-    showHeader();
+    showHeader(true);
     section("your stats");
 
     const allScores = readScores();
@@ -414,7 +413,7 @@ program
   .alias("s")
   .description("preview a file and inspect line stats")
   .action((file) => {
-    showHeader();
+    showHeader(true);
 
     const filePath = path.resolve(file);
 
@@ -464,7 +463,7 @@ program
       output: process.stdout,
     });
 
-    showHeader();
+    showHeader(true);
     section("setup — gemini api key");
 
     console.log("  " + t.muted("get your free key at:"));
@@ -509,7 +508,7 @@ program
   .command("install")
   .description("hook into git — auto-check on every commit")
   .action(() => {
-    showHeader();
+    showHeader(true);
     section("installing git hook");
 
     if (!fs.existsSync(path.resolve(".git"))) {
