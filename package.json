@@ -1,7 +1,7 @@
 {
   "name": "explainit",
-  "version": "1.0.3",
-  "description": "🧠 AI-powered CLI that quizzes you on your code before you commit",
+  "version": "2.0.0",
+  "description": "🧠 AI CLI that tests code comprehension on git diffs, explains AI changes, and writes commit messages",
   "main": "bin/explainit.js",
   "bin": {
     "explainit": "bin/explainit.js"
@@ -37,6 +37,7 @@
   "files": [
     "bin/explainit.js",
     "lib/ai.js",
+    "lib/diff.js",
     "lib/quiz.js",
     "lib/scores.js",
     "run-quiz.js",
