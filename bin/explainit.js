@@ -531,6 +531,11 @@ program
     const script = `#!/bin/sh
 # explainit pre-commit hook
 
+# Reconnect stdin to the terminal if running in an interactive terminal
+if [ -t 1 ]; then
+  exec </dev/tty
+fi
+
 if command -v explainit >/dev/null 2>&1; then
   explainit pre-commit
 elif [ -f "./run-quiz.js" ]; then
