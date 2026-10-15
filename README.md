@@ -331,16 +331,16 @@ explainit score
 
 ## 📋 roadmap
 
-- [x] auto-quiz on git commit via pre-commit hook
-- [x] AI question generation with Gemini
-- [x] answer evaluation with instant feedback
-- [x] local score tracking and streak system
-- [x] per-user API key — bring your own key model
-- [x] quiz on actual staged git diffs instead of raw files (v2.0)
-- [x] multiple-choice 1-key questions (1, 2, 3, s to skip) (v2.0)
-- [x] `explainit explain` — human explanation of what the AI wrote (v2.0)
-- [x] `explainit msg` — auto-generate conventional commit message from diff (v2.0)
-- [x] cross-platform support (macOS, Linux, Windows) (v2.0)
+- [✓] auto-quiz on git commit via pre-commit hook
+- [✓] AI question generation with Gemini
+- [✓] answer evaluation with instant feedback
+- [✓] local score tracking and streak system
+- [✓] per-user API key — bring your own key model
+- [✓] quiz on actual staged git diffs instead of raw files (v2.0)
+- [✓] multiple-choice 1-key questions (1, 2, 3, s to skip) (v2.0)
+- [✓] `explainit explain` — human explanation of what the AI wrote (v2.0)
+- [✓] `explainit msg` — auto-generate conventional commit message from diff (v2.0)
+- [✓] cross-platform support (macOS, Linux, Windows) (v2.0)
 - [ ] MCP server (use explainit inside Cursor / Claude Code)
 - [ ] VS Code extension
 - [ ] team leaderboard mode
