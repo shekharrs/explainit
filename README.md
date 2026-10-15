@@ -342,7 +342,7 @@ explainit score
 - [✓] `explainit msg` — auto-generate conventional commit message from diff (v2.0)
 - [✓] cross-platform support (macOS, Linux, Windows) (v2.0)
 - [ ] MCP server (use explainit inside Cursor / Claude Code)
-<!-- - [ ] VS Code extension -->
+- [ ] VS Code extension
 - [ ] team leaderboard mode
 - [ ] `--strict` mode that blocks commit if score is too low
 
