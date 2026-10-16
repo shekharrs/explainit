@@ -1,6 +1,6 @@
 {
   "name": "explainit",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "🧠 AI CLI that tests code comprehension on git diffs, explains AI changes, and writes commit messages",
   "main": "bin/explainit.js",
   "bin": {
