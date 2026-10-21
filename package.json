@@ -40,7 +40,6 @@
     "lib/diff.js",
     "lib/quiz.js",
     "lib/scores.js",
-    "run-quiz.js",
     "README.md",
     "LICENSE"
   ],

@@ -22,6 +22,10 @@ import {
 
 const program = new Command();
 
+const pkg = JSON.parse(
+  fs.readFileSync(new URL("../package.json", import.meta.url), "utf-8")
+);
+
 // ─────────────────────────────────────────────────────────────
 // 🎨 THEME
 // ─────────────────────────────────────────────────────────────
@@ -56,7 +60,7 @@ function showHeader(compact = false) {
   console.log(
     "  " + t.brand("🧠 explainit") +
     t.muted("  ·  ") + t.accent("understand your code") +
-    t.muted("  ·  ") + t.info("v2.0.0")
+    t.muted("  ·  ") + t.info(`v${pkg.version}`)
   );
   if (!compact) {
     console.log(t.muted("  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"));
@@ -81,7 +85,7 @@ program
   .name("explainit")
   .usage("[command] [options]")
   .description(t.brand("🧠 test your code comprehension before it ships"))
-  .version(t.accent("2.0.0"), "-V, --version");
+  .version(t.accent(pkg.version), "-V, --version");
 
 const COMMAND_HELP_MAP = {
   explain: { name: "explain|exp", args: "[file name]" },
@@ -527,7 +531,7 @@ program
 
     const hookPath = path.join(hooksDir, "pre-commit");
 
-    // Robust shell script that checks global explainit, local npx, or run-quiz.js
+    // Clean, robust shell script that invokes explainit directly
     const script = `#!/bin/sh
 # explainit pre-commit hook
 
@@ -538,10 +542,10 @@ fi
 
 if command -v explainit >/dev/null 2>&1; then
   explainit pre-commit
-elif [ -f "./run-quiz.js" ]; then
-  node "./run-quiz.js"
 elif [ -f "./bin/explainit.js" ]; then
   node "./bin/explainit.js" pre-commit
+elif command -v npx >/dev/null 2>&1; then
+  npx --no-install explainit pre-commit 2>/dev/null || true
 fi
 
 exit 0
@@ -552,27 +556,7 @@ exit 0
       fs.chmodSync(hookPath, "755");
     } catch {}
 
-    const runnerPath = path.resolve("run-quiz.js");
-    const runner = `// explainit pre-commit runner
-try {
-  const { runQuiz } = await import("explainit/lib/quiz.js");
-  await runQuiz();
-} catch {
-  try {
-    const { runQuiz } = await import("./lib/quiz.js");
-    await runQuiz();
-  } catch {
-    const { execSync } = await import("child_process");
-    try {
-      execSync("explainit pre-commit", { stdio: "inherit" });
-    } catch {}
-  }
-}
-`;
-    fs.writeFileSync(runnerPath, runner);
-
     console.log("  " + t.success("✓") + " " + t.white("git hook installed at .git/hooks/pre-commit"));
-    console.log("  " + t.success("✓") + " " + t.white("run-quiz.js created"));
     console.log();
     console.log(
       "  " + t.brand("◆") + " " + t.white("every") +

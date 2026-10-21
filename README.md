@@ -266,7 +266,6 @@ explainit/
 │   ├── diff.js         # Staged Git diff processing
 │   ├── quiz.js         # Quiz prompts and answer checking
 │   └── scores.js       # Quiz history and streak tracking
-├── run-quiz.js         # Git hook bridge, created during install
 └── package.json
 ```
 
