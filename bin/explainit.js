@@ -130,6 +130,7 @@ program.addHelpText(
     "  " + t.muted("$") + "  " + t.accent("git commit -m \"$(explainit msg)\"") + t.muted(" # auto conventional commit"),
     "  " + t.muted("$") + "  " + t.accent("explainit quiz") + t.muted("             # run 1-key comprehension check"),
     "  " + t.muted("$") + "  " + t.accent("explainit score") + t.muted("            # check your stats and streak"),
+    "  " + t.muted("$") + "  " + t.accent("explainit scan <file>") + t.muted("       # preview a file and inspect line stats"),
     "",
   ].join("\n")
 );

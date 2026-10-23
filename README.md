@@ -10,11 +10,11 @@
 
 ### Understand your code before you ship it.
 
-**Quiz your staged Git changes, understand AI-generated code, and generate clear commit messages.**
+**Quiz your staged Git changes, understand AI-generated code, scan files, and generate clear commit messages.**
 
 </div>
 
-`explainit` adds a lightweight understanding check to your Git workflow. It reads your staged changes, generates a short multiple-choice question in the terminal, and helps you review what you are about to commit.
+A lightweight developer CLI that adds an understanding check to your Git workflow. It inspects staged diffs, scans files for line statistics and risk metrics, asks a quick multiple-choice question in the terminal, and helps developers review AI-generated code before committing.
 
 ## Table of contents
 
@@ -26,6 +26,7 @@
 - [Usage](#usage)
 - [Command reference](#command-reference)
 - [Tracking your progress](#tracking-your-progress)
+- [Inspecting and scanning files](#inspecting-and-scanning-files)
 - [API key and privacy](#api-key-and-privacy)
 - [Project structure](#project-structure)
 - [Technology stack](#technology-stack)
@@ -47,8 +48,8 @@ AI coding tools can generate working code quickly, but working code is not alway
 - **Quiz staged changes**: generate a short multiple-choice question from your staged Git diff.
 - **Explain code changes**: get a readable summary of changes, key decisions, and potential concerns.
 - **Generate commit messages**: create a commit message from the staged diff.
+- **Scan and inspect files**: preview target files, view line statistics, and assess risk levels before committing (`explainit scan`).
 - **Track quiz progress**: view previous quiz results and your score history.
-- **Scan a file**: inspect a file and view its line statistics.
 
 > The quiz is a check on your own understanding. It does not replace tests, code review, or security checks.
 
@@ -223,6 +224,12 @@ View your quiz history:
 explainit score
 ```
 
+Preview and scan a file:
+
+```bash
+explainit scan src/auth.js
+```
+
 ## Command reference
 
 | Command                  | Alias | Description                                                    |
@@ -233,7 +240,7 @@ explainit score
 | `explainit msg`          | `m`   | Generate a commit message from the staged diff.                |
 | `explainit quiz [file]`  | `q`   | Quiz yourself on staged changes or a specified file.           |
 | `explainit score`        | `sc`  | View quiz results, history, and streak information.            |
-| `explainit scan <file>`  | `s`   | Preview a file and its line statistics.                        |
+| `explainit scan <file>`  | `s`   | Preview a file, inspect line statistics, additions, and risk metrics. |
 
 Run `explainit --help` to see the commands and aliases available in your installed version.
 
@@ -244,6 +251,38 @@ explainit score
 ```
 
 The `score` command shows your quiz history and progress, including correct and incorrect answers and streak information.
+
+## Inspecting and scanning files
+
+Inspect any source file before staging or committing:
+
+```bash
+explainit scan src/auth.js
+```
+
+Example terminal output:
+
+```text
+  🧠 explainit  ·  understand your code  ·  v2.0.4
+
+  ▸ file info
+  ────────────────────────────────────────────
+  📄  path                src/auth.js
+  📏  lines               85
+  💾  size                2.8 kb
+
+  ▸ preview
+  ────────────────────────────────────────────
+    1 │ import jwt from "jsonwebtoken";
+    2 │ import { db } from "../config/db.js";
+    3 │ 
+    ...
+  ... 65 more lines
+
+  ✓ scan complete  →  explainit explain src/auth.js
+```
+
+The `scan` command previews a target file with line statistics, addition metrics, and quick risk level insights before committing or pushing.
 
 ## API key and privacy
 
